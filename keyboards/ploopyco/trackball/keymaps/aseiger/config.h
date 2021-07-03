@@ -8,3 +8,7 @@
 
 // Disable unused features
 #define NO_ACTION_ONESHOT
+
+#define OPT_DEBOUNCE 1
+
+#define PLOOPY_DRAGSCROLL_MOMENTARY

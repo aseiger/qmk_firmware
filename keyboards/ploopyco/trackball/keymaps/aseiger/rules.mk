@@ -3,9 +3,8 @@
 
 # Enable desired features
 LTO_ENABLE = yes     # Enable Link Time Optimization
+TAP_DANCE_ENABLE = yes
 
 # Disable unused features
 EXTRAKEY_ENABLE = no # Disable system control keys
 MOUSEKEY_ENABLE = no # Disable extra mouse keys
-
-SRC += anomalocaridid.c
