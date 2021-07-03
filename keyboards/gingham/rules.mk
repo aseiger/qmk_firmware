@@ -36,3 +36,5 @@ AUDIO_ENABLE = no           # Audio output on port C6
 CUSTOM_MATRIX = lite
 OLED_DRIVER_ENABLE = yes
 WPM_ENABLE = yes
+
+UNICODE_ENABLE = yes

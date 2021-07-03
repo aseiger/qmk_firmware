@@ -210,4 +210,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define MIDI_TONE_KEYCODE_OCTAVES 1
 
 #define OLED_FONT_H "./lib/glcdfont.c"
+#define OLED_TIMEOUT 600000
+#define OLED_BRIGHTNESS 128
+
+#define UNICODE_SELECTED_MODES UC_WINC
 
