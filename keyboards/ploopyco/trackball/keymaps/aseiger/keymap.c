@@ -49,12 +49,12 @@ void xtra_lp_reset(qk_tap_dance_state_t *state, void *user_data);
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT( /* Base */
         KC_BTN1, KC_BTN3, KC_BTN2, // Primary Buttons
-        KC_BTN4, TD(XTRA_LP)         // Secondary Buttons
+        TD(XTRA_LP), KC_BTN5         // Secondary Buttons
     ),
 
     [SCRL] = LAYOUT(
-        DRAG_SCROLL, RESET, KC_BTN5,
-        DPI_CONFIG, _______
+        DRAG_SCROLL, RESET, KC_BTN4,
+        _______, DPI_CONFIG
     ),
 };
 
@@ -83,7 +83,7 @@ void xtra_lp_finished(qk_tap_dance_state_t *state, void *user_data) {
         case TD_SINGLE_HOLD:
             {
                 report_mouse_t currentReport = pointing_device_get_report();
-                currentReport.buttons |= 1 << (KC_MS_BTN5 - KC_MS_BTN1);
+                currentReport.buttons |= 1 << (KC_MS_BTN4 - KC_MS_BTN1);
                 pointing_device_set_report(currentReport);
                 pointing_device_send();
             }
@@ -102,7 +102,7 @@ void xtra_lp_reset(qk_tap_dance_state_t *state, void *user_data) {
         case TD_SINGLE_HOLD:
             {
                 report_mouse_t currentReport = pointing_device_get_report();
-                currentReport.buttons &= ~(1 << (KC_MS_BTN5 - KC_MS_BTN1));
+                currentReport.buttons &= ~(1 << (KC_MS_BTN4 - KC_MS_BTN1));
                 pointing_device_set_report(currentReport);
                 pointing_device_send();
             }
