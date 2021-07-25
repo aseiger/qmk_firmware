@@ -1,4 +1,7 @@
 #include QMK_KEYBOARD_H
+#include <stdio.h>
+#include <stdlib.h>
+
 
 enum sofle_layers {
     /* _M_XYZ = Mac Os, _W_XYZ = Win/Linux */
@@ -137,14 +140,71 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #ifdef OLED_DRIVER_ENABLE
 
-static void render_logo(void) {
-    static const char PROGMEM qmk_logo[] = {
-        0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,0x90,0x91,0x92,0x93,0x94,
-        0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,0xb0,0xb1,0xb2,0xb3,0xb4,
-        0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,0xd0,0xd1,0xd2,0xd3,0xd4,0
-    };
+// WPM-responsive animation stuff here
+#define IDLE_FRAMES 7
+#define IDLE_SPEED 25 // below this wpm value your animation will idle
 
-    oled_write_P(qmk_logo, false);
+// #define PREP_FRAMES 1 // uncomment if >1
+
+#define TAP_FRAMES 2
+#define TAP_SPEED 30 // above this wpm value typing animation to triggere
+
+#define ANIM_FRAME_DURATION 75 // how long each frame lasts in ms
+// #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
+#define ANIM_SIZE 512 // number of bytes in array, minimize for adequate firmware size, max is 1024
+
+char starfield_display[ANIM_SIZE] = {0};
+
+uint32_t anim_timer = 0;
+uint32_t anim_sleep = 0;
+uint8_t current_idle_frame = 0;
+
+static void render_logo(void) {
+	if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
+		anim_timer = timer_read32();
+		
+		//shift everything to the left one pixel
+		for (int i = 0; i < 127; i++)
+		{
+			starfield_display[i] = starfield_display[i+1];
+		}
+		for (int i = 128; i < 256; i++)
+		{
+			starfield_display[i] = starfield_display[i+1];
+		}
+		for (int i = 256; i < 383; i++)
+		{
+			starfield_display[i] = starfield_display[i+1];
+		}
+		for (int i = 384; i < 511; i++)
+		{
+			starfield_display[i] = starfield_display[i+1];
+		}
+		
+		//determine if we should print a star
+		int num_stars = (rand() % 500);
+		if (num_stars < get_current_wpm()) num_stars = 1;
+		else num_stars = 0;
+		
+		starfield_display[511] = 0;
+		starfield_display[383] = 0;
+		starfield_display[255] = 0;
+		starfield_display[127] = 0;
+		
+		for (int i = 0; i < num_stars; i++)
+		{
+			int star_pos = rand() % 33;
+			if (star_pos >= 24) starfield_display[511] = 0x1 << (star_pos - 24);
+			else if (star_pos >= 16) starfield_display[383] = 0x1 << (star_pos - 16);
+			else if (star_pos >= 8) starfield_display[255] = 0x1 << (star_pos - 8);
+			else starfield_display[127] = 0x1 << star_pos;
+			
+		}
+
+		//current_idle_frame = (current_idle_frame + 1) % IDLE_FRAMES;
+		oled_write_raw(starfield_display, ANIM_SIZE);  // remove if IDLE_FRAMES >1
+	}
+	anim_sleep = timer_read32();
 }
 
 static void print_status_narrow(void) {
@@ -194,6 +254,9 @@ static void print_status_narrow(void) {
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+	
+	srand(256);
+	
     if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     }
