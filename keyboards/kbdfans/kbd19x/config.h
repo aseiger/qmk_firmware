@@ -53,16 +53,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LED_PIN_ON_STATE 0
 
 #define BACKLIGHT_PIN B6
-#ifdef BACKLIGHT_PIN
-#define BACKLIGHT_LEVELS 3
-#endif
+//#ifdef BACKLIGHT_PIN
+//#define BACKLIGHT_LEVELS 3
+//#endif
 #define RGB_DI_PIN E2
 #ifdef RGB_DI_PIN
 #define RGBLIGHT_ANIMATIONS
 #define RGBLED_NUM 18
-#define RGBLIGHT_HUE_STEP 8
-#define RGBLIGHT_SAT_STEP 8
-#define RGBLIGHT_VAL_STEP 8
+//#define RGBLIGHT_HUE_STEP 8
+//#define RGBLIGHT_SAT_STEP 8
+//#define RGBLIGHT_VAL_STEP 8
 #define RGBLIGHT_SLEEP
 #endif
 
