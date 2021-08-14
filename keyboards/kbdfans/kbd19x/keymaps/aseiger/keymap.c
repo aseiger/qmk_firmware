@@ -26,8 +26,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                    KC_RALT, MO(1),   KC_RCTL,       KC_LEFT, KC_DOWN, KC_RGHT,    KC_P0,   KC_PDOT, KC_PENT  \
   ),
   [1] = LAYOUT_all( /* Func */
-    RESET,   NK_ON,   NK_OFF,  _______, _______, BL_BRTG, _______, _______, _______, _______, _______, _______, RGB_TOG,  BL_STEP,         KC_INS,  KC_SLCK, KC_PAUS, KC_CALC, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_RMOD,RGB_MOD,  KC_MUTE,_______, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,\
+    RESET,   DM_PLY1, DM_PLY2, NK_ON,   NK_OFF,  BL_BRTG, _______, _______, _______, _______, _______, _______, RGB_TOG,  BL_STEP,         KC_INS,  KC_SLCK, KC_PAUS, KC_CALC, \
+    _______, DM_REC1, DM_REC2, _______, _______, _______, _______, _______, _______, _______, _______, RGB_RMOD,RGB_MOD,  KC_MUTE,_______, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,\
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______,         RGB_M_SN,RGB_M_K, RGB_M_X, RGB_SPI, \
     _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______,         RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,     _______,   KC_VOLU,    RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD, \
