@@ -31,6 +31,13 @@ enum td_keycodes{
     XTRA_LP,
 };
 
+//Macros
+enum macro_keycodes
+{
+	KC_LDSKT = PLOOPY_SAFE_RANGE,
+	KC_RDSKT
+};
+
 typedef enum {
     TD_NONE,
     TD_UNKNOWN,
@@ -49,7 +56,7 @@ void xtra_lp_reset(qk_tap_dance_state_t *state, void *user_data);
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT( /* Base */
         KC_BTN1, KC_BTN3, KC_BTN2, // Primary Buttons
-        TD(XTRA_LP), KC_BTN5         // Secondary Buttons
+        TD(XTRA_LP), KC_RDSKT         // Secondary Buttons
     ),
 
     [SCRL] = LAYOUT(
@@ -80,13 +87,19 @@ void xtra_lp_finished(qk_tap_dance_state_t *state, void *user_data) {
     td_state = cur_dance(state);
     switch (td_state) {
         case TD_SINGLE_TAP:
-        case TD_SINGLE_HOLD:
-            {
-                report_mouse_t currentReport = pointing_device_get_report();
+		case TD_SINGLE_HOLD:
+		{
+			register_code(KC_LCTL);
+			register_code(KC_LGUI);
+			register_code(KC_LEFT);
+			unregister_code(KC_LEFT);
+			unregister_code(KC_LGUI);
+			unregister_code(KC_LCTL);
+/*                 report_mouse_t currentReport = pointing_device_get_report();
                 currentReport.buttons |= 1 << (KC_MS_BTN4 - KC_MS_BTN1);
                 pointing_device_set_report(currentReport);
-                pointing_device_send();
-            }
+                pointing_device_send(); */
+        }
             break;
         case TD_DOUBLE_SINGLE_HOLD:
             layer_on(SCRL);
@@ -99,12 +112,12 @@ void xtra_lp_finished(qk_tap_dance_state_t *state, void *user_data) {
 void xtra_lp_reset(qk_tap_dance_state_t *state, void *user_data) {
     switch (td_state) {
         case TD_SINGLE_TAP:
-        case TD_SINGLE_HOLD:
+		case TD_SINGLE_HOLD:
             {
-                report_mouse_t currentReport = pointing_device_get_report();
+/*                 report_mouse_t currentReport = pointing_device_get_report();
                 currentReport.buttons &= ~(1 << (KC_MS_BTN4 - KC_MS_BTN1));
                 pointing_device_set_report(currentReport);
-                pointing_device_send();
+                pointing_device_send(); */
             }
             break;
         case TD_DOUBLE_SINGLE_HOLD:
@@ -119,3 +132,39 @@ void xtra_lp_reset(qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {
     [XTRA_LP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, xtra_lp_finished, xtra_lp_reset)
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
+{
+	switch (keycode)
+	{
+		case KC_LDSKT:
+		{
+			if (record->event.pressed)
+			{
+				register_code(KC_LCTL);
+				register_code(KC_LGUI);
+				register_code(KC_LEFT);
+				unregister_code(KC_LEFT);
+				unregister_code(KC_LGUI);
+				unregister_code(KC_LCTL);
+			}
+			break;
+		}
+		case KC_RDSKT:
+		{
+			if (record->event.pressed)
+			{
+				register_code(KC_LCTL);
+				register_code(KC_LGUI);
+				register_code(KC_RIGHT);
+				unregister_code(KC_RIGHT);
+				unregister_code(KC_LGUI);
+				unregister_code(KC_LCTL);
+			}
+			break;
+		}
+	}
+	return true;
+}
+
+
