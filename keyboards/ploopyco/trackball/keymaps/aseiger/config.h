@@ -7,6 +7,8 @@
 #define PLOOPY_DRAGSCROLL_DPI 100
 #define PLOOPY_DRAGSCROLL_INVERT
 
+#define PLOOPY_DPI_OPTIONS { 200, 700, 1200, 1600, 2400 }
+
 // Disable unused features
 #define NO_ACTION_ONESHOT
 
