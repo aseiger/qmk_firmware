@@ -1,2 +1,2 @@
-DEBOUNCE_TYPE = sym_eager_pk
+DEBOUNCE_TYPE = sym_defer_g
 DYNAMIC_MACRO_ENABLE = yes
