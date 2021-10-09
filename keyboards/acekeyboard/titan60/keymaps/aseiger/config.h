@@ -1,0 +1,12 @@
+#pragma once
+
+#include "config_common.h"
+
+#define SOLENOID_PIN D2
+#define SOLENOID_DEFAULT_DWELL 12
+#define SOLENOID_MIN_DWELL 4
+#define SOLENOID_MAX_DWELL 100
+#define SOLENOID_DWELL_STEP_SIZE 1
+
+#define RGBLIGHT_LAYERS
+#define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
