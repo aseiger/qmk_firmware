@@ -27,7 +27,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                              KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, 
                                              KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, 
                                              KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_VOLU, KC_NO, KC_TRNS, 
-                                             KC_NO, KC_NO, KC_NO, KC_MPLY,                                KC_MPRV, KC_VOLD, KC_MNXT, KC_TRNS)     
+                                             OSL(4), KC_NO, KC_NO, KC_MPLY,                                KC_MPRV, KC_VOLD, KC_MNXT, KC_TRNS),
+        [4] = LAYOUT_60_ansi_split_bs_rshift(KC_NO, UC(0x3A9), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, 
+                                             KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, 
+                                             KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, 
+                                             KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS, 
+                                             KC_TRNS, KC_NO, KC_NO, KC_NO,                                    KC_NO, KC_NO, KC_NO, KC_TRNS) 											 
 };
 
 #ifdef OLED_DRIVER_ENABLE
@@ -69,6 +74,9 @@ void oled_task_user(void) {
             break;
         case 3:
             oled_write_P(PSTR("MEDIA\n"), false);
+            break;
+		case 4:
+            oled_write_P(PSTR("UNICODE\n"), false);
             break;
         default:
             // Or use the write_ln shortcut over adding '\n' to the end of your string

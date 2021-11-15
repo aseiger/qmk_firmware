@@ -257,12 +257,15 @@ void pointing_device_task(void) {
         mouse_report.h = mouse_report.x;
 #ifdef PLOOPY_DRAGSCROLL_INVERT
         // Invert vertical scroll direction
-        mouse_report.v = -mouse_report.y;
+        mouse_report.v = -(mouse_report.y);
 #else
         mouse_report.v = mouse_report.y;
 #endif
         mouse_report.x = 0;
         mouse_report.y = 0;
+		
+		mouse_report.h = constrain(mouse_report.h, -1, 1) * OPT_SCALE;
+		mouse_report.v = constrain(mouse_report.v, -1, 1) * OPT_SCALE;
     }
 
     pointing_device_set_report(mouse_report);
