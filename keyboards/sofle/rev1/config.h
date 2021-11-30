@@ -33,6 +33,8 @@
 #define USE_SERIAL
 #define SERIAL_USE_MULTI_TRANSACTION
 #define SOFT_SERIAL_PIN D2
+//#define USE_I2C
+
 
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION

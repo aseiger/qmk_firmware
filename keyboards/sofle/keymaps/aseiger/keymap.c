@@ -83,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|  MUTE |    |  PREV |------+------+------+------+------+------|
  * | Shift|  =   |  -   |  +   |   {  |   }  |-------|    |-------|   [  |   ]  |   ;  |   :  |   \  | Shift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *            | LCTR | LGUI | LALT |LOWER | /Enter  /       \Space \  |RAISE | RALT | RGUI | RCTR |
+ *            | LCTR | LGUI | LALT |LOWER | /Space  /       \  _   \  |RAISE | RALT | RGUI | RCTR |
  *            |      |      |      |      |/       /         \      \ |      |      |      |      |
  *            `----------------------------------'           '------''---------------------------'
  */
@@ -92,7 +92,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_F12, \
   _______, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                       KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE, \
   _______,  KC_EQL, KC_MINS, KC_PLUS, KC_LCBR, KC_RCBR, _______,       KC_MPRV, KC_LBRC, KC_RBRC, KC_SCLN, KC_COLN, KC_BSLS, _______, \
-                       _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______\
+                       _______, _______, _______, _______, _______,       KC_UNDS, _______, _______, _______, _______\
 ),
 /* RAISE
  * ,----------------------------------------.                    ,-----------------------------------------.
@@ -100,11 +100,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | Esc  | Ins  | Pscr | Menu |      |      |                    |      | PWrd |  Up  | NWrd | DLine| Bspc |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * | Tab  | LAt  | LCtl |LShift|      | Caps |-------.    ,-------|      | Left | Down | Rigth|  Del | Bspc |
+ * | Tab  | LAt  | LCtl |LShift|   _  | Caps |-------.    ,-------|      | Left | Down | Rigth|  Del | Bspc |
  * |------+------+------+------+------+------|  MUTE |    | NEXT  |------+------+------+------+------+------|
- * |Shift | Undo |  Cut | Copy | Paste|   _  |-------|    |-------|      | LStr |      | LEnd |      | Shift|
+ * |Shift | Undo |  Cut | Copy | Paste|      |-------|    |-------|      | LStr |      | LEnd |      | Shift|
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *            | LCTR | LGUI | LALT |LOWER | /Enter  /       \Space \  |RAISE | RALT | RGUI | RCTR |
+ *            | LCTR | LGUI | LALT |LOWER | /   _   /       \Space \  |RAISE | RALT | RGUI | RCTR |
  *            |      |      |      |      |/       /         \      \ |      |      |      |      |
  *            `----------------------------------'           '------''---------------------------'
  */
@@ -113,7 +113,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______,  KC_INS,  KC_PSCR,   KC_APP,  XXXXXXX, XXXXXXX,                        KC_PGUP, KC_PRVWD,   KC_UP, KC_NXTWD,KC_DLINE, KC_BSPC, \
   _______, KC_LALT,  KC_LCTL,  KC_LSFT,  KC_UNDS, KC_CAPS,                       KC_PGDN,  KC_LEFT, KC_DOWN, KC_RGHT,  KC_DEL, KC_BSPC, \
   _______,KC_UNDO, KC_CUT, KC_COPY, KC_PASTE, XXXXXXX,  _______,       KC_MNXT,  XXXXXXX, KC_LSTRT, XXXXXXX, KC_LEND,   XXXXXXX, _______, \
-                         _______, _______, _______, _______, _______,       _______, _______, _______, _______, _______ \
+                         _______, _______, _______, _______, KC_UNDS,       _______, _______, _______, _______, _______ \
 ),
 /* ADJUST
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -150,7 +150,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define TAP_SPEED 30 // above this wpm value typing animation to triggere
 
 #define ANIM_FRAME_DURATION 75 // how long each frame lasts in ms
-// #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
+//#define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
 #define ANIM_SIZE 512 // number of bytes in array, minimize for adequate firmware size, max is 1024
 
 char starfield_display[ANIM_SIZE] = {0};
@@ -198,7 +198,8 @@ uint8_t current_idle_frame = 0;
 
 static int previous_pixel_rate = 0;
 
-static void render_logo(void) {
+static void play_animation(void)
+{
 	if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
 		anim_timer = timer_read32();
 		
@@ -252,11 +253,27 @@ static void render_logo(void) {
 			main_display[i] = starfield_display[i] | pgm_read_byte(&(epd_bitmap_spaceship[i]));
 		}
 
-		//current_idle_frame = (current_idle_frame + 1) % IDLE_FRAMES;
 		oled_write_raw(main_display, ANIM_SIZE);  // remove if IDLE_FRAMES >1
 		previous_pixel_rate = starfield_pixel_rate;
 	}
-	anim_sleep = timer_read32();
+}
+
+static void render_logo(void) 
+{
+	if(get_current_wpm() != 000)
+	{
+        oled_on(); // not essential but turns on animation OLED with any alpha keypress
+		play_animation();
+		anim_sleep = timer_read32();
+	}
+	else
+	{
+		if(timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
+            oled_off();
+        } else {
+			play_animation();
+        }
+	}
 }
 
 static void print_status_narrow(void) {
