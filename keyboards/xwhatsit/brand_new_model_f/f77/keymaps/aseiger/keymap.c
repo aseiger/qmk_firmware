@@ -38,11 +38,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTRL, KC_LGUI, KC_LALT,                      KC_SPC,                  KC_RALT, MO(_FN), KC_RCTRL,    KC_P0,   KC_PDOT,   KC_PENT
     ),
     [_FN] = LAYOUT_ansi_regular_shift_regular_backspace(
-        KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8,   KC_F9, KC_F10,    KC_F11, KC_F12, KC_DEL,            _______,   KC_PSLS, KC_PAST,
-        KC_NO,      KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_PSCR, KC_SLCK, KC_PAUS, KC_NO, KC_NO, KC_INS,          KC_HOME,   KC_UP,   KC_PGUP,
-        _______,     KC_VOLD, KC_VOLU, KC_MUTE, KC_EJCT, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, _______,             KC_LEFT,   KC_NO,   KC_RGHT,
-        _______,         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NUM,                         KC_END,    KC_DOWN, KC_PGDN,
-        _______, _______, _______,                             MO(_FN2),                       _______, _______, KC_APP,       KC_INS,    KC_DEL,  _______
+        KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8,   KC_F9, KC_F10,    KC_F11, KC_F12, _______,            _______,   KC_PSLS, KC_PAST,
+        _______,    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_PSCR, KC_SLCK, KC_PAUS, KC_NO, KC_NO, _______,          KC_HOME,   KC_UP,   KC_PGUP,
+        _______,     KC_VOLD, KC_VOLU, KC_MUTE, KC_EJCT, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, _______,              KC_LEFT,   KC_NO,   KC_RGHT,
+        _______,         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, _______,                         KC_END,    KC_DOWN, KC_PGDN,
+        _______, _______, _______,                             MO(_FN2),               _______, _______, KC_APP,                KC_INS,    KC_DEL,  _______
     ),
     [_FN2] = LAYOUT_ansi_regular_shift_regular_backspace(
         _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, _______,  HPT_DWLD, HPT_DWLI, _______,   _______, _______, _______,
