@@ -16,8 +16,11 @@
  */
 
 #include "audio.h"
-#include "ch.h"
-#include "hal.h"
+#include "gpio.h"
+
+// Need to disable GCC's "tautological-compare" warning for this file, as it causes issues when running `KEEP_INTERMEDIATES=yes`. Corresponding pop at the end of the file.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtautological-compare"
 
 /*
   Audio Driver: DAC
@@ -74,9 +77,9 @@ GPTConfig gpt7cfg1 = {.frequency = AUDIO_DAC_SAMPLE_RATE,
 
 static void gpt_audio_state_cb(GPTDriver *gptp);
 GPTConfig   gptStateUpdateCfg = {.frequency = 10,
-                               .callback  = gpt_audio_state_cb,
-                               .cr2       = TIM_CR2_MMS_1, /* MMS = 010 = TRGO on Update Event.    */
-                               .dier      = 0U};
+                                 .callback  = gpt_audio_state_cb,
+                                 .cr2       = TIM_CR2_MMS_1, /* MMS = 010 = TRGO on Update Event.    */
+                                 .dier      = 0U};
 
 static const DACConfig dac_conf_ch1 = {.init = AUDIO_DAC_OFF_VALUE, .datamode = DAC_DHRM_12BIT_RIGHT};
 static const DACConfig dac_conf_ch2 = {.init = AUDIO_DAC_OFF_VALUE, .datamode = DAC_DHRM_12BIT_RIGHT};
@@ -115,13 +118,15 @@ void         channel_1_set_frequency(float freq) {
     channel_1_frequency = freq;
 
     channel_1_stop();
-    if (freq <= 0.0)  // a pause/rest has freq=0
+    if (freq <= 0.0) // a pause/rest has freq=0
         return;
 
     gpt6cfg1.frequency = 2 * freq * AUDIO_DAC_BUFFER_SIZE;
     channel_1_start();
 }
-float channel_1_get_frequency(void) { return channel_1_frequency; }
+float channel_1_get_frequency(void) {
+    return channel_1_frequency;
+}
 
 void channel_2_start(void) {
     gptStart(&GPTD7, &gpt7cfg1);
@@ -140,13 +145,15 @@ void         channel_2_set_frequency(float freq) {
     channel_2_frequency = freq;
 
     channel_2_stop();
-    if (freq <= 0.0)  // a pause/rest has freq=0
+    if (freq <= 0.0) // a pause/rest has freq=0
         return;
 
     gpt7cfg1.frequency = 2 * freq * AUDIO_DAC_BUFFER_SIZE;
     channel_2_start();
 }
-float channel_2_get_frequency(void) { return channel_2_frequency; }
+float channel_2_get_frequency(void) {
+    return channel_2_frequency;
+}
 
 static void gpt_audio_state_cb(GPTDriver *gptp) {
     if (audio_update_state()) {
@@ -155,8 +162,8 @@ static void gpt_audio_state_cb(GPTDriver *gptp) {
         channel_1_set_frequency(audio_get_processed_frequency(0));
         channel_2_set_frequency(audio_get_processed_frequency(0));
 
-#else  // two separate audio outputs/speakers
-       // primary speaker on A4, optional secondary on A5
+#else // two separate audio outputs/speakers
+      // primary speaker on A4, optional secondary on A5
         if (AUDIO_PIN == A4) {
             channel_1_set_frequency(audio_get_processed_frequency(0));
             if (AUDIO_PIN_ALT == A5) {
@@ -183,7 +190,7 @@ static void gpt_audio_state_cb(GPTDriver *gptp) {
     }
 }
 
-void audio_driver_initialize() {
+void audio_driver_initialize_impl(void) {
     if ((AUDIO_PIN == A4) || (AUDIO_PIN_ALT == A4)) {
         palSetPadMode(GPIOA, 4, PAL_MODE_INPUT_ANALOG);
         dacStart(&DACD1, &dac_conf_ch1);
@@ -216,7 +223,7 @@ void audio_driver_initialize() {
     gptStart(&AUDIO_STATE_TIMER, &gptStateUpdateCfg);
 }
 
-void audio_driver_stop(void) {
+void audio_driver_stop_impl(void) {
     if ((AUDIO_PIN == A4) || (AUDIO_PIN_ALT == A4)) {
         gptStopTimer(&GPTD6);
 
@@ -234,7 +241,7 @@ void audio_driver_stop(void) {
     gptStopTimer(&AUDIO_STATE_TIMER);
 }
 
-void audio_driver_start(void) {
+void audio_driver_start_impl(void) {
     if ((AUDIO_PIN == A4) || (AUDIO_PIN_ALT == A4)) {
         dacStartConversion(&DACD1, &dac_conv_grp_ch1, (dacsample_t *)dac_buffer_1, AUDIO_DAC_BUFFER_SIZE);
     }
@@ -243,3 +250,5 @@ void audio_driver_start(void) {
     }
     gptStartContinuous(&AUDIO_STATE_TIMER, 2U);
 }
+
+#pragma GCC diagnostic pop

@@ -19,12 +19,10 @@
 #include <stdint.h>
 #include "report.h"
 #include "i2c_master.h"
+#include "pointing_device.h"
 
 #ifndef PIMORONI_TRACKBALL_ADDRESS
 #    define PIMORONI_TRACKBALL_ADDRESS 0x0A
-#endif
-#ifndef PIMORONI_TRACKBALL_INTERVAL_MS
-#    define PIMORONI_TRACKBALL_INTERVAL_MS 8
 #endif
 #ifndef PIMORONI_TRACKBALL_SCALE
 #    define PIMORONI_TRACKBALL_SCALE 5
@@ -52,10 +50,12 @@ typedef struct {
     uint8_t click;
 } pimoroni_data_t;
 
-void         pimironi_trackball_device_init(void);
-void         pimoroni_trackball_set_rgbw(uint8_t red, uint8_t green, uint8_t blue, uint8_t white);
-int16_t      pimoroni_trackball_get_offsets(uint8_t negative_dir, uint8_t positive_dir, uint8_t scale);
-void         pimoroni_trackball_adapt_values(int8_t* mouse, int16_t* offset);
-float        pimoroni_trackball_get_precision(void);
-void         pimoroni_trackball_set_precision(float precision);
-i2c_status_t read_pimoroni_trackball(pimoroni_data_t* data);
+extern const pointing_device_driver_t pimoroni_trackball_pointing_device_driver;
+
+bool           pimoroni_trackball_device_init(void);
+void           pimoroni_trackball_set_rgbw(uint8_t red, uint8_t green, uint8_t blue, uint8_t white);
+int16_t        pimoroni_trackball_get_offsets(uint8_t negative_dir, uint8_t positive_dir, uint8_t scale);
+uint16_t       pimoroni_trackball_get_cpi(void);
+void           pimoroni_trackball_set_cpi(uint16_t cpi);
+i2c_status_t   read_pimoroni_trackball(pimoroni_data_t* data);
+report_mouse_t pimoroni_trackball_get_report(report_mouse_t mouse_report);

@@ -22,29 +22,24 @@ typedef ioline_t pin_t;
 
 /* Operation of GPIO by pin. */
 
-#define setPinInput(pin) palSetLineMode(pin, PAL_MODE_INPUT)
-#define setPinInputHigh(pin) palSetLineMode(pin, PAL_MODE_INPUT_PULLUP)
-#define setPinInputLow(pin) palSetLineMode(pin, PAL_MODE_INPUT_PULLDOWN)
-#define setPinOutput(pin) palSetLineMode(pin, PAL_MODE_OUTPUT_PUSHPULL)
+#define gpio_set_pin_input(pin) palSetLineMode((pin), PAL_MODE_INPUT)
+#define gpio_set_pin_input_high(pin) palSetLineMode((pin), PAL_MODE_INPUT_PULLUP)
+#define gpio_set_pin_input_low(pin) palSetLineMode((pin), PAL_MODE_INPUT_PULLDOWN)
+#define gpio_set_pin_output_push_pull(pin) palSetLineMode((pin), PAL_MODE_OUTPUT_PUSHPULL)
+#define gpio_set_pin_output_open_drain(pin) palSetLineMode((pin), PAL_MODE_OUTPUT_OPENDRAIN)
+#define gpio_set_pin_output(pin) gpio_set_pin_output_push_pull(pin)
 
-#define writePinHigh(pin) palSetLine(pin)
-#define writePinLow(pin) palClearLine(pin)
-#define writePin(pin, level) ((level) ? (writePinHigh(pin)) : (writePinLow(pin)))
+#define gpio_write_pin_high(pin) palSetLine(pin)
+#define gpio_write_pin_low(pin) palClearLine(pin)
+#define gpio_write_pin(pin, level)    \
+    do {                              \
+        if (level) {                  \
+            gpio_write_pin_high(pin); \
+        } else {                      \
+            gpio_write_pin_low(pin);  \
+        }                             \
+    } while (0)
 
-#define readPin(pin) palReadLine(pin)
+#define gpio_read_pin(pin) palReadLine(pin)
 
-#define togglePin(pin) palToggleLine(pin)
-
-/* Operation of GPIO by port. */
-
-typedef uint16_t port_data_t;
-
-#define readPort(pin) palReadPort(PAL_PORT(pin))
-
-#define setPortBitInput(pin, bit) palSetPadMode(PAL_PORT(pin), bit, PAL_MODE_INPUT)
-#define setPortBitInputHigh(pin, bit) palSetPadMode(PAL_PORT(pin), bit, PAL_MODE_INPUT_PULLUP)
-#define setPortBitInputLow(pin, bit) palSetPadMode(PAL_PORT(pin), bit, PAL_MODE_INPUT_PULLDOWN)
-#define setPortBitOutput(pin, bit) palSetPadMode(PAL_PORT(pin), bit, PAL_MODE_OUTPUT_PUSHPULL)
-
-#define writePortBitLow(pin, bit) palClearLine(PAL_LINE(PAL_PORT(pin), bit))
-#define writePortBitHigh(pin, bit) palSetLine(PAL_LINE(PAL_PORT(pin), bit))
+#define gpio_toggle_pin(pin) palToggleLine(pin)

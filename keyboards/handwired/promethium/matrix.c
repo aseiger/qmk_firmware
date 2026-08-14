@@ -43,18 +43,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if (MATRIX_COLS <= 8)
 #    define print_matrix_header()  print("\nr/c 01234567\n")
 #    define print_matrix_row(row)  print_bin_reverse8(matrix_get_row(row))
-#    define matrix_bitpop(i)       bitpop(matrix[i])
-#    define ROW_SHIFTER ((uint8_t)1)
 #elif (MATRIX_COLS <= 16)
 #    define print_matrix_header()  print("\nr/c 0123456789ABCDEF\n")
 #    define print_matrix_row(row)  print_bin_reverse16(matrix_get_row(row))
-#    define matrix_bitpop(i)       bitpop16(matrix[i])
-#    define ROW_SHIFTER ((uint16_t)1)
 #elif (MATRIX_COLS <= 32)
 #    define print_matrix_header()  print("\nr/c 0123456789ABCDEF0123456789ABCDEF\n")
 #    define print_matrix_row(row)  print_bin_reverse32(matrix_get_row(row))
-#    define matrix_bitpop(i)       bitpop32(matrix[i])
-#    define ROW_SHIFTER  ((uint32_t)1)
 #endif
 
 #ifdef MATRIX_MASKED
@@ -114,7 +108,7 @@ void matrix_init(void) {
         matrix_debouncing[i] = 0;
     }
 
-    matrix_init_quantum();
+    matrix_init_kb();
 }
 
 uint8_t matrix_scan(void)
@@ -144,16 +138,8 @@ uint8_t matrix_scan(void)
         }
 #   endif
 
-    matrix_scan_quantum();
+    matrix_scan_kb();
     return 1;
-}
-
-bool matrix_is_modified(void)
-{
-#if (DEBOUNCE > 0)
-    if (debouncing) return false;
-#endif
-    return true;
 }
 
 inline
@@ -185,16 +171,6 @@ void matrix_print(void)
         print("\n");
     }
 }
-
-uint8_t matrix_key_count(void)
-{
-    uint8_t count = 0;
-    for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
-        count += matrix_bitpop(i);
-    }
-    return count;
-}
-
 
 #define ROW_MASK 0b11100000
 
@@ -248,7 +224,7 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
                 uint8_t pin_state = (_SFR_IO8(pin >> 4) & _BV(pin & 0xF));
 
                 // Populate the matrix row with the state of the col pin
-                current_matrix[current_row] |=  pin_state ? 0 : (ROW_SHIFTER << tp_index);
+                current_matrix[current_row] |=  pin_state ? 0 : (MATRIX_ROW_SHIFTER << tp_index);
             }
             return (last_row_value != current_matrix[current_row]);
         }
@@ -266,7 +242,7 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
             uint8_t pin_state = (_SFR_IO8(pin >> 4) & _BV(pin & 0xF));
 
             // Populate the matrix row with the state of the col pin
-            current_matrix[current_row] |=  pin_state ? 0 : (ROW_SHIFTER << col_index);
+            current_matrix[current_row] |=  pin_state ? 0 : (MATRIX_ROW_SHIFTER << col_index);
         }
 
         // Unselect row
