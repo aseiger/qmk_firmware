@@ -168,7 +168,7 @@ void keyboard_pre_init_user(void) {
 
 void pointing_device_init_user(void)
 {
-	pimoroni_trackball_set_rgbw(0x00, 0x00, 0x00, 0xFF);
+	pimoroni_trackball_set_rgbw(0x00, 0x00, 0x00, 0x3F);
 }
 
 #define SCROLL_DIVISOR_H 8.0
@@ -208,27 +208,28 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 			gpio_write_pin_low(GP22);
 			gpio_write_pin_high(GP26);
 			gpio_write_pin_high(GP28);
-			pimoroni_trackball_set_rgbw(0xFF, 0x00, 0x00, 0x00);
+			pimoroni_trackball_set_rgbw(0x3F, 0x00, 0x3F, 0x00);
 			pimoroni_trackball_set_cpi(16000);
 			break;
 		case _RAISE:
 			gpio_write_pin_high(GP22);
 			gpio_write_pin_low(GP26);
 			gpio_write_pin_high(GP28);
-			pimoroni_trackball_set_rgbw(0x00, 0xFF, 0x00, 0x00);
+			pimoroni_trackball_set_rgbw(0x3F, 0x3F, 0x00, 0x00);
+			pimoroni_trackball_set_cpi(64000);
 			break;
 		case _ADJUST:
 			gpio_write_pin_high(GP22);
 			gpio_write_pin_high(GP26);
 			gpio_write_pin_low(GP28);
-			pimoroni_trackball_set_rgbw(0x00, 0x00, 0xFF, 0x00);
+			pimoroni_trackball_set_rgbw(0x00, 0x00, 0x00, 0x3F);
 		    break;
 		default:
 			gpio_write_pin_high(GP22);
 			gpio_write_pin_high(GP26);
 			gpio_write_pin_high(GP28);
-			pimoroni_trackball_set_cpi(64000);
-			pimoroni_trackball_set_rgbw(0x00, 0x00, 0x00, 0xFF);
+			pimoroni_trackball_set_cpi(32000);
+			pimoroni_trackball_set_rgbw(0x3F, 0x00, 0x00, 0x00);
 			break;
 	}
 	return state;
